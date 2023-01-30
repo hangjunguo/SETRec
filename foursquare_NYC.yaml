@@ -1,0 +1,65 @@
+# environment settings
+gpu_id: 8
+device: cuda
+data_path: data/foursquare_NYC/
+dataset: foursquare_NYC
+checkpoint_dir: saved/
+seed: 999
+has_pretrained_teacher: False
+
+
+# dataset settings
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: venue_id
+RATING_FIELD:
+TIME_FIELD: timestamp
+LABEL_FIELD: label
+
+load_col:
+    inter: [user_id, venue_id, timestamp]
+    user: [user_id]
+    item: [venue_id]
+
+unload_col:
+
+inter_num_filter:
+    min_user_inter_num: 1
+    max_user_inter_num:
+    min_item_inter_num: 1
+    max_item_inter_num:
+
+threshold: #{rating: 1}
+
+
+# Model Settings
+model: widedeep
+embedding_size: [32, 32, 32]
+mlp_hidden_size: [[32], [64], [128]]
+dropout: [0, 0, 0]
+
+
+# Training Settings
+model_num: 3
+epochs: [300, 300, 300]
+train_batch_size: 1024
+learning_rate: [1e-3, 1e-3, 1e-3]
+weight_decay: 0
+neg_sampling: 1
+popularity: 0.8
+pseudo_sample_nums: [0, 0, 0]
+pseudo_candidate_scope: 300
+eval_step: 1
+stopping_step: 30
+
+
+# Evaluation Settings
+eval_neg_sampling: 999
+eval_args:
+    split: LOO  # {'LS': 'valid_and_test'}
+    group_by: False
+    ratios: [6, 2, 2]
+    order: TO
+metrics: ['Hit', 'MRR', 'NDCG']
+topk: [5, 10, 20]
+valid_metric: 'hit@10'
+eval_batch_size: 4096
